@@ -10,6 +10,7 @@ This README provides instructions for installing Git on Windows and Linux and gu
 2. [Installing Git on Linux](#installing-git-on-linux)
 3. [Configuring Git](#configuring-git)
 4. [Further Process](#further-process)
+5. [Handling Authentication Issues](#handling-authentication-issues)
 
 ---
 
@@ -133,6 +134,50 @@ Push the changes to the remote repository:
 ```bash
 git push -u origin main
 ```
+
+---
+
+## Handling Authentication Issues
+
+GitHub removed password-based authentication for HTTPS URLs as of August 13, 2021. Instead, use **Personal Access Tokens (PATs)** or SSH for authentication.
+
+### Using a Personal Access Token (PAT)
+#### Step 1: Generate a PAT
+1. Log in to GitHub.
+2. Go to **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)** → **Generate new token**.
+3. Select the necessary scopes (e.g., `repo` for repository access).
+4. Generate and copy the token. Save it securely.
+
+#### Step 2: Use the Token
+When prompted for your GitHub credentials during `git push`:
+- **Username**: Your GitHub username (e.g., `vaish105`).
+- **Password**: The Personal Access Token.
+
+#### Step 3: Update Remote URL (Optional)
+To save the token permanently:
+```bash
+git remote set-url origin https://<username>:<personal_access_token>@github.com/<username>/<repository>.git
+```
+
+### Using SSH Authentication
+1. Generate an SSH key:
+   ```bash
+   ssh-keygen -t ed25519 -C "your_email@example.com"
+   ```
+2. Add the key to GitHub:
+   - Copy the public key:
+     ```bash
+     cat ~/.ssh/id_ed25519.pub
+     ```
+   - Go to **Settings** → **SSH and GPG keys** → **New SSH Key** and paste the key.
+3. Update the Git remote URL to SSH:
+   ```bash
+   git remote set-url origin git@github.com:username/repository.git
+   ```
+4. Test it:
+   ```bash
+   git push origin main
+   ```
 
 ---
 
