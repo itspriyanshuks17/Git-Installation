@@ -27,8 +27,17 @@ echo.
 echo Select file(s) to commit (separate numbers with space or comma):
 for /l %%j in (1,1,%i%) do (
     set "line=!file[%%j]!"
-    set "line=!line:~3!"
-    echo   %%j. !line!
+    set "status=!line:~0,2!"
+    set "filename=!line:~3!"
+    rem Remove any trailing or leading quotes from filename
+    if "!filename:~0,1!"=="\"" set "filename=!filename:~1!"
+    if "!filename:~-1!"=="\"" set "filename=!filename:~0,-1!"
+    rem Remove trailing slash for directories for display only
+    set "displayname=!filename!"
+    if not "!displayname:~-1!"=="/" goto :nodirslash%%j
+    set "displayname=!displayname:~0,-1!/"
+    :nodirslash%%j
+    echo   %%j. !displayname!
 )
 echo   0. Exit
 
@@ -51,13 +60,21 @@ for %%n in (%choice%) do (
         goto main
     )
     set "line=!file[!idx!]!"
+    set "status=!line:~0,2!"
     set "filename=!line:~3!"
-    if not exist "!filename!" (
-        echo Invalid file: !filename!
-        pause
-        goto main
+    if "!filename:~0,1!"=="\"" set "filename=!filename:~1!"
+    if "!filename:~-1!"=="\"" set "filename=!filename:~0,-1!"
+    rem If deleted file (status D), do not check existence, just add if filename is not empty
+    if /i "!status!"=="D " (
+        if not "!filename!"=="" set "selected_files=!selected_files! "!filename!""
+    ) else (
+        if not exist "!filename!" (
+            echo Invalid file: !filename!
+            pause
+            goto main
+        )
+        set "selected_files=!selected_files! "!filename!""
     )
-    set "selected_files=!selected_files! "!filename!""
 )
 
 echo.
