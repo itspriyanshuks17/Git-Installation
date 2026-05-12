@@ -14,7 +14,7 @@ echo "Installing dnf plugins..."
 sudo dnf install -y dnf-plugins-core
 
 echo "Adding Docker repository..."
-sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo
 
 echo "Installing Docker..."
 sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
