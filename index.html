@@ -213,77 +213,160 @@
     white-space: pre;
   }
 
-  /* ── Code Block ── */
+  /* ══════════════════════════════════════
+     Terminal / Code Block
+  ══════════════════════════════════════ */
   .code-block {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    margin: 14px 0;
+    position: relative;
+    background: #0b0d12;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    margin: 20px 0;
     overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 8px 32px rgba(0,0,0,0.6),
+      0 2px 8px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: box-shadow 0.25s;
+  }
+  .code-block:hover {
+    box-shadow:
+      0 0 0 1px rgba(247,147,30,0.15),
+      0 12px 40px rgba(0,0,0,0.7),
+      0 2px 8px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.05);
   }
 
+  /* Title bar */
   .code-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
+    justify-content: flex-end;
+    padding: 0 14px;
+    height: 38px;
+    background: linear-gradient(180deg, #1c1f2b 0%, #15182200 100%);
+    background-color: #181b26;
+    border-bottom: 1px solid rgba(255,255,255,0.055);
+    position: relative;
+    gap: 10px;
   }
 
+  /* Language pill — centred absolutely */
   .code-lang {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--accent);
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
+    pointer-events: none;
+    white-space: nowrap;
   }
 
-  .code-dots { display: flex; gap: 5px; }
-  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .cd-r { background: #ff5f56; }
-  .cd-y { background: #febc2e; }
-  .cd-g { background: #27c93f; }
+  /* Mac dots — top right */
+  .code-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-left: auto;
+  }
+  .code-dot {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: inset 0 -1px 1px rgba(0,0,0,0.3);
+    transition: filter 0.15s;
+  }
+  .code-block:hover .code-dot { filter: brightness(1.2); }
+  .cd-r { background: radial-gradient(circle at 35% 35%, #ff7d73, #ff5f56); }
+  .cd-y { background: radial-gradient(circle at 35% 35%, #ffd080, #febc2e); }
+  .cd-g { background: radial-gradient(circle at 35% 35%, #5de071, #27c93f); }
 
-  /* ── Copy Button ── */
+  /* Code body */
+  .code-block code {
+    display: block;
+    padding: 18px 22px 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 2;
+    color: #c9d1d9;
+    overflow-x: auto;
+    tab-size: 2;
+    counter-reset: line;
+  }
+
+  /* Syntax colours */
+  .code-block code .cm   { color: #4d5566; font-style: italic; }
+  .code-block code .kw   { color: #ff79c6; }
+  .code-block code .str  { color: #a8ff78; }
+  .code-block code .fn   { color: #79b8ff; }
+  .code-block code .flag { color: #ffd166; }
+  .code-block code .val  { color: #56d4dd; }
+  .code-block code .hl   { color: var(--accent); font-weight: 700; }
+
+  /* Prompt gutter for bash blocks */
+  .code-block[data-lang="bash"] code,
+  .code-block[data-lang="sh"] code {
+    padding-left: 38px;
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent calc(2em * 1 - 1px),
+      rgba(255,255,255,0.015) calc(2em * 1)
+    );
+  }
+
+  /* ── Copy Button (hover, bottom-right) ── */
   .copy-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 12px;
     display: flex;
     align-items: center;
     gap: 5px;
-    background: rgba(247,147,30,0.08);
-    border: 1px solid rgba(247,147,30,0.25);
-    color: var(--text-dim);
-    padding: 3px 10px;
-    border-radius: 5px;
+    background: rgba(22, 26, 38, 0.92);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.4);
+    padding: 5px 11px;
+    border-radius: 6px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    letter-spacing: 0.05em;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.2s;
     user-select: none;
     text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    z-index: 10;
   }
-  .copy-btn:hover { background: rgba(247,147,30,0.18); border-color: var(--accent); color: var(--accent); }
-  .copy-btn.copied { background: rgba(57,211,83,0.15); border-color: var(--green); color: var(--green); }
+  .code-block:hover .copy-btn,
+  .yaml-block:hover .copy-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+  .copy-btn:hover {
+    background: rgba(247,147,30,0.18);
+    border-color: rgba(247,147,30,0.5);
+    color: var(--accent);
+    box-shadow: 0 0 12px rgba(247,147,30,0.2);
+  }
+  .copy-btn.copied {
+    background: rgba(39,201,63,0.15);
+    border-color: rgba(39,201,63,0.4);
+    color: #27c93f;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
   .copy-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
-
-  .code-block code {
-    display: block;
-    padding: 16px 20px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    line-height: 1.9;
-    color: var(--text);
-    overflow-x: auto;
-  }
-
-  .code-block code .cm { color: var(--text-dim); }
-  .code-block code .kw { color: var(--purple); }
-  .code-block code .str { color: var(--green); }
-  .code-block code .fn { color: var(--blue); }
-  .code-block code .flag { color: var(--yellow); }
-  .code-block code .val { color: var(--cyan); }
-  .code-block code .hl { color: var(--accent); font-weight: 600; }
 
   /* ── Inline code ── */
   code {
@@ -405,29 +488,57 @@
   .conflict-sep  { background: rgba(255,255,255,0.03); padding: 4px 18px; color: var(--text-dim); }
   .conflict-theirs{ background: rgba(88,166,255,0.07); padding: 12px 18px; border-left: 3px solid var(--blue); }
 
-  /* ── GitHub Actions ── */
+  /* ── GitHub Actions / YAML Block ── */
   .yaml-block {
-    background: var(--code-bg);
-    border: 1px solid rgba(57,211,83,0.3);
-    border-radius: 8px;
-    margin: 14px 0;
+    position: relative;
+    background: #080d0c;
+    border: 1px solid rgba(57,211,83,0.12);
+    border-radius: 12px;
+    margin: 20px 0;
     overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 8px 32px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(57,211,83,0.05);
+    transition: box-shadow 0.25s;
+  }
+  .yaml-block:hover {
+    box-shadow:
+      0 0 0 1px rgba(57,211,83,0.18),
+      0 12px 40px rgba(0,0,0,0.65),
+      inset 0 1px 0 rgba(57,211,83,0.07);
   }
 
   .yaml-header {
-    background: rgba(57,211,83,0.08);
-    padding: 8px 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid rgba(57,211,83,0.2);
+    justify-content: flex-end;
+    height: 38px;
+    padding: 0 14px;
+    background: linear-gradient(180deg, #101a14 0%, transparent 100%);
+    background-color: #0e1610;
+    border-bottom: 1px solid rgba(57,211,83,0.1);
+    gap: 10px;
+    position: relative;
   }
 
-  .yaml-header span { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--green); }
+  .yaml-header > span:first-child {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: rgba(57,211,83,0.45);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
 
-  .yaml-header { justify-content: space-between; }
-  .yaml-header .copy-btn { border-color: rgba(57,211,83,0.25); }
-  .yaml-header .copy-btn:hover { background: rgba(57,211,83,0.15); border-color: var(--green); color: var(--green); }
+  .yaml-header .code-dots { margin-left: auto; }
+  .yaml-header .cd-r { background: radial-gradient(circle at 35% 35%, #ff7d73, #ff5f56); }
+  .yaml-header .cd-y { background: radial-gradient(circle at 35% 35%, #ffd080, #febc2e); }
+  .yaml-header .cd-g { background: radial-gradient(circle at 35% 35%, #5de071, #27c93f); }
 
   /* ── Footer ── */
   .site-footer {
